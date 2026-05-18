@@ -26,9 +26,9 @@ export const JBP_FONTS = {
 // ─── Episode metadata ────────────────────────────────────────────────────────
 // Edit these to match your episode
 export const JBP_EPISODE = {
-  number: 700,
-  title: "No More Games",
-  date: "2024",
+  number: 001,
+  title: "Once again it's on",
+  date: "2026",
   fps: 30,
   width: 1920,
   height: 1080,
@@ -37,8 +37,8 @@ export const JBP_EPISODE = {
 // ─── Single camera config ────────────────────────────────────────────────────
 // One video file, one host. Change the filename and details below.
 export const JBP_CAMERA = {
-  videoSrc: vid("podcast.mp4"), // ← your video filename in D:\vids
-  hostName: "Your Name",
+  videoSrc: vid("20220802_232841.mp4"), // ← your video filename in D:\vids
+  hostName: "Black$",
   hostTitle: "Host",
   accentColor: JBP_COLORS.red,
 };
