@@ -71,3 +71,17 @@ export const JBP_HIGHLIGHTS = [
     endAt: 90,
   },
 ];
+
+// ─── Closed captions ─────────────────────────────────────────────────────────
+// Times are in seconds. Use buildCaptions() or parseSRT() from
+// src/jbp/utils/parseSRT.ts to generate these from a .srt file instead.
+//
+// Tip: one CCLine per sentence/breath. Keep lines under ~10 words.
+export const JBP_CAPTIONS = [
+  { text: "Yo, welcome back to the show.", start: 1.5,  end: 4.0,  speaker: "JOE"   },
+  { text: "Episode seven hundred, let's go.",  start: 4.2,  end: 6.8,  speaker: "JOE"   },
+  { text: "Seven hundred episodes, bro.",       start: 7.0,  end: 9.2,  speaker: "ICE"   },
+  { text: "That's actually crazy.",             start: 9.4,  end: 11.0, speaker: "ISH"   },
+  { text: "We been doing this forever.",        start: 11.2, end: 13.5, speaker: "PARKS" },
+  { text: "No more games.",                     start: 14.0, end: 16.0, speaker: "JOE"   },
+];

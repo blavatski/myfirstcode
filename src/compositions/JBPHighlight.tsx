@@ -10,17 +10,30 @@ import {
 import { JBP_COLORS, JBP_EPISODE, JBP_FONTS, JBP_HIGHLIGHTS } from "../jbp/jbp.config";
 import { LowerThird } from "../jbp/components/LowerThird";
 import { Waveform } from "../jbp/components/Waveform";
+import { ClosedCaption, CCLine } from "../jbp/components/ClosedCaption";
 
 interface JBPHighlightProps {
-  highlightIndex?: number; // which entry in JBP_HIGHLIGHTS to use
+  highlightIndex?: number;
+  captions?: CCLine[];   // optional CC lines; auto-generates from quote if omitted
 }
 
 export const JBPHighlight: React.FC<JBPHighlightProps> = ({
   highlightIndex = 0,
+  captions,
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height, durationInFrames } = useVideoConfig();
   const clip = JBP_HIGHLIGHTS[highlightIndex] ?? JBP_HIGHLIGHTS[0];
+
+  // Auto-generate a single CC line from the clip's quote if none provided
+  const ccLines: CCLine[] = captions ?? [
+    {
+      text: clip.quote,
+      startFrame: 20,
+      endFrame: durationInFrames - 20,
+      speaker: clip.speakerName.split(" ")[0].toUpperCase(),
+    },
+  ];
 
   // ── Full-screen video scale-in ───────────────────────────────────────────
   const scaleIn = spring({ frame, fps, config: { damping: 20, stiffness: 80, mass: 0.8 } });
@@ -205,6 +218,9 @@ export const JBPHighlight: React.FC<JBPHighlightProps> = ({
       >
         <Waveform barCount={24} color={JBP_COLORS.red} height={28} width={160} />
       </div>
+
+      {/* Closed captions — sits between the accent bar and the quote */}
+      <ClosedCaption captions={ccLines} bottomOffset={24} />
     </AbsoluteFill>
   );
 };

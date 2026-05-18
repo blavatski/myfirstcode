@@ -7,9 +7,13 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { JBP_COLORS, JBP_EPISODE, JBP_FONTS, JBP_SPEAKERS } from "../jbp/jbp.config";
+import { JBP_CAPTIONS, JBP_COLORS, JBP_EPISODE, JBP_FONTS, JBP_SPEAKERS } from "../jbp/jbp.config";
 import { LowerThird } from "../jbp/components/LowerThird";
 import { Waveform } from "../jbp/components/Waveform";
+import { ClosedCaption } from "../jbp/components/ClosedCaption";
+import { buildCaptions } from "../jbp/utils/parseSRT";
+
+const CC_LINES = buildCaptions(JBP_EPISODE.fps, JBP_CAPTIONS);
 
 // One speaker cell in the 2x2 grid
 const SpeakerCell: React.FC<{
@@ -224,6 +228,9 @@ export const JBPPodcast: React.FC = () => {
         {/* Waveform right */}
         <Waveform barCount={36} color={JBP_COLORS.red} height={28} width={240} />
       </div>
+
+      {/* Closed captions — sits above the bottom bar */}
+      <ClosedCaption captions={CC_LINES} bottomOffset={bottomBarH + 16} />
     </AbsoluteFill>
   );
 };
