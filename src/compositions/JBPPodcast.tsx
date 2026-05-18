@@ -7,7 +7,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { JBP_CAPTIONS, JBP_COLORS, JBP_EPISODE, JBP_FONTS, JBP_SPEAKERS } from "../jbp/jbp.config";
+import { JBP_CAPTIONS, JBP_CAMERA, JBP_COLORS, JBP_EPISODE, JBP_FONTS } from "../jbp/jbp.config";
 import { LowerThird } from "../jbp/components/LowerThird";
 import { Waveform } from "../jbp/components/Waveform";
 import { ClosedCaption } from "../jbp/components/ClosedCaption";
@@ -15,108 +15,46 @@ import { buildCaptions } from "../jbp/utils/parseSRT";
 
 const CC_LINES = buildCaptions(JBP_EPISODE.fps, JBP_CAPTIONS);
 
-// One speaker cell in the 2x2 grid
-const SpeakerCell: React.FC<{
-  speaker: (typeof JBP_SPEAKERS)[number];
-  style?: React.CSSProperties;
-  showLowerThird?: boolean;
-}> = ({ speaker, style, showLowerThird = true }) => {
-  return (
-    <div
-      style={{
-        position: "relative",
-        backgroundColor: JBP_COLORS.darkGray,
-        overflow: "hidden",
-        ...style,
-      }}
-    >
-      {/* Video feed */}
-      <OffthreadVideo
-        src={speaker.videoSrc}
-        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-      />
-
-      {/* Vignette */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Accent border on active speaker */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          border: `2px solid ${speaker.accentColor}44`,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Lower third */}
-      {showLowerThird && (
-        <LowerThird
-          name={speaker.name}
-          title={speaker.title}
-          accentColor={speaker.accentColor}
-          showAtFrame={15}
-          hideAtFrame={undefined}
-        />
-      )}
-    </div>
-  );
-};
-
-// 2x2 grid layout
 export const JBPPodcast: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
+  const { fps } = useVideoConfig();
 
-  // Top bar slides down
-  const topBarH = interpolate(
+  // Top and bottom bars slide in
+  const barH = interpolate(
     spring({ frame, fps, config: { damping: 20, stiffness: 120 } }),
     [0, 1],
     [0, 52]
   );
-
-  // Bottom bar slides up
-  const bottomBarH = interpolate(
-    spring({ frame: frame - 5, fps, config: { damping: 20, stiffness: 120 } }),
-    [0, 1],
-    [0, 52]
-  );
-
-  const topBarOpacity = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: "clamp" });
-
-  const cellW = width / 2;
-  const cellH = (height - topBarH - bottomBarH) / 2;
+  const barOpacity = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000", fontFamily: JBP_FONTS.body }}>
 
-      {/* 2x2 speaker grid */}
-      <div
-        style={{
-          position: "absolute",
-          top: topBarH,
-          left: 0,
-          right: 0,
-          bottom: bottomBarH,
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gridTemplateRows: "1fr 1fr",
-          gap: 3,
-          backgroundColor: "#000",
-        }}
-      >
-        {JBP_SPEAKERS.map((speaker) => (
-          <SpeakerCell key={speaker.id} speaker={speaker} />
-        ))}
-      </div>
+      {/* Full-screen video */}
+      <AbsoluteFill style={{ top: barH, bottom: barH }}>
+        <OffthreadVideo
+          src={JBP_CAMERA.videoSrc}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+
+        {/* Bottom vignette so lower third text is readable */}
+        <AbsoluteFill
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.75) 100%)",
+            pointerEvents: "none",
+          }}
+        />
+      </AbsoluteFill>
+
+      {/* Speaker lower third */}
+      <LowerThird
+        name={JBP_CAMERA.hostName}
+        title={JBP_CAMERA.hostTitle}
+        accentColor={JBP_CAMERA.accentColor}
+        showAtFrame={20}
+        hideAtFrame={undefined}
+      />
 
       {/* Top bar */}
       <div
@@ -125,7 +63,7 @@ export const JBPPodcast: React.FC = () => {
           top: 0,
           left: 0,
           right: 0,
-          height: topBarH,
+          height: barH,
           backgroundColor: "#0D0D0D",
           borderBottom: `1px solid ${JBP_COLORS.border}`,
           display: "flex",
@@ -133,10 +71,9 @@ export const JBPPodcast: React.FC = () => {
           justifyContent: "space-between",
           padding: "0 28px",
           overflow: "hidden",
-          opacity: topBarOpacity,
+          opacity: barOpacity,
         }}
       >
-        {/* Show name */}
         <div
           style={{
             color: JBP_COLORS.white,
@@ -150,7 +87,6 @@ export const JBPPodcast: React.FC = () => {
           The Joe Budden Podcast
         </div>
 
-        {/* Episode pill */}
         <div
           style={{
             backgroundColor: JBP_COLORS.red,
@@ -166,7 +102,7 @@ export const JBPPodcast: React.FC = () => {
           EP. {JBP_EPISODE.number} — {JBP_EPISODE.title}
         </div>
 
-        {/* Live dot */}
+        {/* Blinking record dot */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div
             style={{
@@ -197,7 +133,7 @@ export const JBPPodcast: React.FC = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: bottomBarH,
+          height: barH,
           backgroundColor: "#0D0D0D",
           borderTop: `1px solid ${JBP_COLORS.border}`,
           display: "flex",
@@ -205,13 +141,12 @@ export const JBPPodcast: React.FC = () => {
           justifyContent: "space-between",
           padding: "0 28px",
           overflow: "hidden",
-          opacity: topBarOpacity,
+          opacity: barOpacity,
         }}
       >
-        {/* Waveform left */}
         <Waveform barCount={36} color={JBP_COLORS.red} height={28} width={240} />
 
-        {/* Center timestamp */}
+        {/* Timecode */}
         <div
           style={{
             color: JBP_COLORS.gray,
@@ -225,12 +160,11 @@ export const JBPPodcast: React.FC = () => {
           {String(Math.floor(frame % 30)).padStart(2, "0")}
         </div>
 
-        {/* Waveform right */}
         <Waveform barCount={36} color={JBP_COLORS.red} height={28} width={240} />
       </div>
 
-      {/* Closed captions — sits above the bottom bar */}
-      <ClosedCaption captions={CC_LINES} bottomOffset={bottomBarH + 16} />
+      {/* Closed captions */}
+      <ClosedCaption captions={CC_LINES} bottomOffset={barH + 16} />
     </AbsoluteFill>
   );
 };

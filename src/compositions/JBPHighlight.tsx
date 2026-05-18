@@ -7,7 +7,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { JBP_COLORS, JBP_EPISODE, JBP_FONTS, JBP_HIGHLIGHTS } from "../jbp/jbp.config";
+import { JBP_CAMERA, JBP_COLORS, JBP_EPISODE, JBP_FONTS, JBP_HIGHLIGHTS } from "../jbp/jbp.config";
 import { LowerThird } from "../jbp/components/LowerThird";
 import { Waveform } from "../jbp/components/Waveform";
 import { ClosedCaption, CCLine } from "../jbp/components/ClosedCaption";

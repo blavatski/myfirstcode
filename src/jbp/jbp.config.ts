@@ -34,45 +34,21 @@ export const JBP_EPISODE = {
   height: 1080,
 };
 
-// ─── Speakers ────────────────────────────────────────────────────────────────
-// Name your files joe.mp4, ice.mp4, ish.mp4, parks.mp4 and drop them in D:\vids
-// or change VIDEO_DIR at the top of this file to match your folder.
-export const JBP_SPEAKERS = [
-  {
-    id: "joe",
-    name: "Joe Budden",
-    title: "Host",
-    accentColor: JBP_COLORS.red,
-    videoSrc: vid("joe.mp4"),
-  },
-  {
-    id: "ice",
-    name: "Ice",
-    title: "Co-Host",
-    accentColor: "#1A6CC4",
-    videoSrc: vid("ice.mp4"),
-  },
-  {
-    id: "ish",
-    name: "Ish",
-    title: "Co-Host",
-    accentColor: "#16A34A",
-    videoSrc: vid("ish.mp4"),
-  },
-  {
-    id: "parks",
-    name: "Parks",
-    title: "Co-Host",
-    accentColor: "#9333EA",
-    videoSrc: vid("parks.mp4"),
-  },
-];
+// ─── Single camera config ────────────────────────────────────────────────────
+// One video file, one host. Change the filename and details below.
+export const JBP_CAMERA = {
+  videoSrc: vid("podcast.mp4"), // ← your video filename in D:\vids
+  hostName: "Your Name",
+  hostTitle: "Host",
+  accentColor: JBP_COLORS.red,
+};
 
 // ─── Highlight clip config ───────────────────────────────────────────────────
+// startFrom / endAt are frame numbers within your video (30 frames = 1 second)
 export const JBP_HIGHLIGHTS = [
   {
-    videoSrc: vid("joe.mp4"),
-    speakerName: "Joe Budden",
+    videoSrc: JBP_CAMERA.videoSrc,
+    speakerName: JBP_CAMERA.hostName,
     quote: "I said what I said.",
     startFrom: 0,
     endAt: 90,
