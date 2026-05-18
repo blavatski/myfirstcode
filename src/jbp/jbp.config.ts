@@ -1,4 +1,11 @@
-import { staticFile } from "remotion";
+// ─── Video source directory ───────────────────────────────────────────────────
+// Point this to wherever your videos live. Uses file:// so Remotion can read
+// files outside the project folder without moving them to public/videos/.
+const VIDEO_DIR = "file:///D:/vids";
+
+function vid(filename: string) {
+  return `${VIDEO_DIR}/${filename}`;
+}
 
 export const JBP_COLORS = {
   bg: "#080808",
@@ -28,43 +35,43 @@ export const JBP_EPISODE = {
 };
 
 // ─── Speakers ────────────────────────────────────────────────────────────────
-// Drop your video files in public/videos/ and update the paths below.
-// Each speaker needs their own camera angle recording.
+// Name your files joe.mp4, ice.mp4, ish.mp4, parks.mp4 and drop them in D:\vids
+// or change VIDEO_DIR at the top of this file to match your folder.
 export const JBP_SPEAKERS = [
   {
     id: "joe",
     name: "Joe Budden",
     title: "Host",
     accentColor: JBP_COLORS.red,
-    videoSrc: staticFile("videos/joe.mp4"),
+    videoSrc: vid("joe.mp4"),
   },
   {
     id: "ice",
     name: "Ice",
     title: "Co-Host",
     accentColor: "#1A6CC4",
-    videoSrc: staticFile("videos/ice.mp4"),
+    videoSrc: vid("ice.mp4"),
   },
   {
     id: "ish",
     name: "Ish",
     title: "Co-Host",
     accentColor: "#16A34A",
-    videoSrc: staticFile("videos/ish.mp4"),
+    videoSrc: vid("ish.mp4"),
   },
   {
     id: "parks",
     name: "Parks",
     title: "Co-Host",
     accentColor: "#9333EA",
-    videoSrc: staticFile("videos/parks.mp4"),
+    videoSrc: vid("parks.mp4"),
   },
 ];
 
 // ─── Highlight clip config ───────────────────────────────────────────────────
 export const JBP_HIGHLIGHTS = [
   {
-    videoSrc: staticFile("videos/joe.mp4"),
+    videoSrc: vid("joe.mp4"),
     speakerName: "Joe Budden",
     quote: "I said what I said.",
     startFrom: 0,

@@ -1,13 +1,11 @@
-import { staticFile } from "remotion";
-
-// ─── PUT YOUR VIDEO FILES IN public/videos/ ────────────────────────────────
-// Then update the paths below. Example: "public/videos/clip1.mp4"
-// staticFile() tells Remotion to serve files from your public/ folder.
+// ─── Video source directory ───────────────────────────────────────────────────
+// Change this to wherever your clips live on your machine.
+const VIDEO_DIR = "file:///D:/vids";
 
 export const MY_VIDEOS = {
-  clip1: staticFile("videos/clip1.mp4"),
-  clip2: staticFile("videos/clip2.mp4"),
-  clip3: staticFile("videos/clip3.mp4"),
+  clip1: `${VIDEO_DIR}/clip1.mp4`,
+  clip2: `${VIDEO_DIR}/clip2.mp4`,
+  clip3: `${VIDEO_DIR}/clip3.mp4`,
 };
 
 // ─── CAPTION CONFIG ─────────────────────────────────────────────────────────
