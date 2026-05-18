@@ -1,0 +1,31 @@
+{
+  "name": "remotion-video-editing",
+  "version": "1.0.0",
+  "description": "Comprehensive Remotion video editing project demonstrating programmatic video editing",
+  "private": true,
+  "scripts": {
+    "start": "npx remotion studio",
+    "build": "npx remotion render",
+    "render:text-overlay": "npx remotion render src/index.ts TextOverlay out/text-overlay.mp4",
+    "render:video-trim": "npx remotion render src/index.ts VideoTrim out/video-trim.mp4",
+    "render:transition": "npx remotion render src/index.ts VideoTransition out/video-transition.mp4",
+    "render:color-grade": "npx remotion render src/index.ts ColorGrade out/color-grade.mp4",
+    "render:multi-clip": "npx remotion render src/index.ts MultiClip out/multi-clip.mp4",
+    "studio": "npx remotion studio"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@remotion/player": "^4.0.0",
+    "remotion": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  },
+  "remotion": {
+    "entryPoint": "src/index.ts"
+  }
+}
