@@ -12,6 +12,9 @@
     "render:color-grade": "npx remotion render src/index.ts ColorGrade out/color-grade.mp4",
     "render:multi-clip": "npx remotion render src/index.ts MultiClip out/multi-clip.mp4",
     "render:my-edit": "npx remotion render src/index.ts MyEdit out/my-edit.mp4",
+    "render:jbp-intro": "npx remotion render src/index.ts JBPIntro out/jbp-intro.mp4",
+    "render:jbp-podcast": "npx remotion render src/index.ts JBPPodcast out/jbp-podcast.mp4",
+    "render:jbp-highlight": "npx remotion render src/index.ts JBPHighlight out/jbp-highlight.mp4",
     "studio": "npx remotion studio"
   },
   "dependencies": {

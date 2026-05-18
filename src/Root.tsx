@@ -7,6 +7,10 @@ import { ColorGrade } from "./compositions/ColorGrade";
 import { MultiClip } from "./compositions/MultiClip";
 import { MyEdit } from "./compositions/MyEdit";
 import { MY_EDIT } from "./videos.config";
+import { JBPIntro } from "./compositions/JBPIntro";
+import { JBPPodcast } from "./compositions/JBPPodcast";
+import { JBPHighlight } from "./compositions/JBPHighlight";
+import { JBP_EPISODE, JBP_HIGHLIGHTS } from "./jbp/jbp.config";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -105,6 +109,41 @@ export const RemotionRoot: React.FC = () => {
         width={MY_EDIT.width}
         height={MY_EDIT.height}
         defaultProps={{}}
+      />
+
+      {/* ── Joe Budden Podcast compositions ───────────────────────────────── */}
+
+      {/* JBPIntro: 5-second animated episode intro card */}
+      <Composition
+        id="JBPIntro"
+        component={JBPIntro}
+        durationInFrames={150}
+        fps={JBP_EPISODE.fps}
+        width={JBP_EPISODE.width}
+        height={JBP_EPISODE.height}
+        defaultProps={{}}
+      />
+
+      {/* JBPPodcast: 2x2 multi-cam layout — set durationInFrames to your clip length */}
+      <Composition
+        id="JBPPodcast"
+        component={JBPPodcast}
+        durationInFrames={300}
+        fps={JBP_EPISODE.fps}
+        width={JBP_EPISODE.width}
+        height={JBP_EPISODE.height}
+        defaultProps={{}}
+      />
+
+      {/* JBPHighlight: full-screen highlight clip with animated quote */}
+      <Composition
+        id="JBPHighlight"
+        component={JBPHighlight}
+        durationInFrames={JBP_HIGHLIGHTS[0] ? JBP_HIGHLIGHTS[0].endAt - JBP_HIGHLIGHTS[0].startFrom + 30 : 120}
+        fps={JBP_EPISODE.fps}
+        width={JBP_EPISODE.width}
+        height={JBP_EPISODE.height}
+        defaultProps={{ highlightIndex: 0 }}
       />
     </>
   );
