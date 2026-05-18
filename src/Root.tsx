@@ -5,6 +5,8 @@ import { VideoTrim } from "./compositions/VideoTrim";
 import { VideoTransition } from "./compositions/VideoTransition";
 import { ColorGrade } from "./compositions/ColorGrade";
 import { MultiClip } from "./compositions/MultiClip";
+import { MyEdit } from "./compositions/MyEdit";
+import { MY_EDIT } from "./videos.config";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -88,6 +90,20 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
+        defaultProps={{}}
+      />
+
+      {/* MyEdit: your personal edit — configure src/videos.config.ts */}
+      <Composition
+        id="MyEdit"
+        component={MyEdit}
+        durationInFrames={
+          MY_EDIT.clips.reduce((sum, c) => sum + (c.endAt - c.startFrom), 0) -
+          MY_EDIT.transitionFrames * (MY_EDIT.clips.length - 1)
+        }
+        fps={MY_EDIT.fps}
+        width={MY_EDIT.width}
+        height={MY_EDIT.height}
         defaultProps={{}}
       />
     </>

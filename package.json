@@ -11,6 +11,7 @@
     "render:transition": "npx remotion render src/index.ts VideoTransition out/video-transition.mp4",
     "render:color-grade": "npx remotion render src/index.ts ColorGrade out/color-grade.mp4",
     "render:multi-clip": "npx remotion render src/index.ts MultiClip out/multi-clip.mp4",
+    "render:my-edit": "npx remotion render src/index.ts MyEdit out/my-edit.mp4",
     "studio": "npx remotion studio"
   },
   "dependencies": {
