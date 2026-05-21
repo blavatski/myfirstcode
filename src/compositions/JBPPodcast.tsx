@@ -13,11 +13,32 @@ import { Waveform } from "../jbp/components/Waveform";
 import { ClosedCaption } from "../jbp/components/ClosedCaption";
 import { buildCaptions } from "../jbp/utils/parseSRT";
 
-const CC_LINES = buildCaptions(JBP_EPISODE.fps, JBP_CAPTIONS);
+interface JBPPodcastProps {
+  videoSrc?: string;
+  hostName?: string;
+  hostTitle?: string;
+  episodeNumber?: number;
+  episodeTitle?: string;
+  episodeDate?: string;
+  accentColor?: string;
+  captions?: Array<{ text: string; start: number; end: number; speaker?: string }>;
+}
 
-export const JBPPodcast: React.FC = () => {
+export const JBPPodcast: React.FC<JBPPodcastProps> = ({
+  videoSrc = JBP_CAMERA.videoSrc,
+  hostName = JBP_CAMERA.hostName,
+  hostTitle = JBP_CAMERA.hostTitle,
+  episodeNumber = JBP_EPISODE.number,
+  episodeTitle = JBP_EPISODE.title,
+  accentColor = JBP_CAMERA.accentColor,
+  captions,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  const CC_LINES = captions
+    ? buildCaptions(fps, captions)
+    : buildCaptions(JBP_EPISODE.fps, JBP_CAPTIONS);
 
   // Top and bottom bars slide in
   const barH = interpolate(
@@ -33,7 +54,7 @@ export const JBPPodcast: React.FC = () => {
       {/* Full-screen video */}
       <AbsoluteFill style={{ top: barH, bottom: barH }}>
         <OffthreadVideo
-          src={JBP_CAMERA.videoSrc}
+          src={videoSrc}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
 
@@ -49,9 +70,9 @@ export const JBPPodcast: React.FC = () => {
 
       {/* Speaker lower third */}
       <LowerThird
-        name={JBP_CAMERA.hostName}
-        title={JBP_CAMERA.hostTitle}
-        accentColor={JBP_CAMERA.accentColor}
+        name={hostName}
+        title={hostTitle}
+        accentColor={accentColor}
         showAtFrame={20}
         hideAtFrame={undefined}
       />
@@ -89,7 +110,7 @@ export const JBPPodcast: React.FC = () => {
 
         <div
           style={{
-            backgroundColor: JBP_COLORS.red,
+            backgroundColor: accentColor,
             color: "#fff",
             fontSize: 12,
             fontWeight: 700,
@@ -99,7 +120,7 @@ export const JBPPodcast: React.FC = () => {
             textTransform: "uppercase",
           }}
         >
-          EP. {JBP_EPISODE.number} — {JBP_EPISODE.title}
+          EP. {episodeNumber} — {episodeTitle}
         </div>
 
         {/* Blinking record dot */}
@@ -109,7 +130,7 @@ export const JBPPodcast: React.FC = () => {
               width: 8,
               height: 8,
               borderRadius: "50%",
-              backgroundColor: JBP_COLORS.red,
+              backgroundColor: accentColor,
               opacity: Math.abs(Math.sin(frame / 15)) * 0.6 + 0.4,
             }}
           />
@@ -144,7 +165,7 @@ export const JBPPodcast: React.FC = () => {
           opacity: barOpacity,
         }}
       >
-        <Waveform barCount={36} color={JBP_COLORS.red} height={28} width={240} />
+        <Waveform barCount={36} color={accentColor} height={28} width={240} />
 
         {/* Timecode */}
         <div
@@ -160,7 +181,7 @@ export const JBPPodcast: React.FC = () => {
           {String(Math.floor(frame % 30)).padStart(2, "0")}
         </div>
 
-        <Waveform barCount={36} color={JBP_COLORS.red} height={28} width={240} />
+        <Waveform barCount={36} color={accentColor} height={28} width={240} />
       </div>
 
       {/* Closed captions */}

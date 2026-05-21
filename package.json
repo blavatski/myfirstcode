@@ -15,19 +15,26 @@
     "render:jbp-intro": "npx remotion render src/index.ts JBPIntro D:\\blackos\\jbp-intro.mp4",
     "render:jbp-podcast": "npx remotion render src/index.ts JBPPodcast D:\\blackos\\jbp-podcast.mp4",
     "render:jbp-highlight": "npx remotion render src/index.ts JBPHighlight D:\\blackos\\jbp-highlight.mp4",
-    "studio": "npx remotion studio"
+    "studio": "npx remotion studio",
+    "app": "concurrently \"node server.cjs\" \"vite --config app/vite.config.ts\"",
+    "server": "node server.cjs"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.0",
     "@remotion/player": "^4.0.0",
-    "remotion": "^4.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "typescript": "^5.0.0"
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "typescript": "^5.0.0",
+    "vite": "^5.4.21"
   },
   "remotion": {
     "entryPoint": "src/index.ts"

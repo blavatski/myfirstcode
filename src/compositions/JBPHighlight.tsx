@@ -14,24 +14,44 @@ import { ClosedCaption, CCLine } from "../jbp/components/ClosedCaption";
 
 interface JBPHighlightProps {
   highlightIndex?: number;
-  captions?: CCLine[];   // optional CC lines; auto-generates from quote if omitted
+  captions?: CCLine[];          // optional CC lines; auto-generates from quote if omitted
+  highlightQuote?: string;      // overrides clip.quote
+  videoSrc?: string;            // overrides clip.videoSrc
+  highlightStart?: number;      // start frame (overrides clip.startFrom)
+  highlightEnd?: number;        // end frame (overrides clip.endAt)
+  hostName?: string;            // overrides clip.speakerName
+  accentColor?: string;         // overrides JBP_COLORS.red
 }
 
 export const JBPHighlight: React.FC<JBPHighlightProps> = ({
   highlightIndex = 0,
   captions,
+  highlightQuote,
+  videoSrc,
+  highlightStart,
+  highlightEnd,
+  hostName,
+  accentColor,
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height, durationInFrames } = useVideoConfig();
   const clip = JBP_HIGHLIGHTS[highlightIndex] ?? JBP_HIGHLIGHTS[0];
 
-  // Auto-generate a single CC line from the clip's quote if none provided
+  // Resolve values: props take priority over clip defaults
+  const resolvedVideoSrc = videoSrc ?? clip.videoSrc;
+  const resolvedQuote = highlightQuote ?? clip.quote;
+  const resolvedStartFrom = highlightStart ?? clip.startFrom;
+  const resolvedEndAt = highlightEnd ?? clip.endAt;
+  const resolvedSpeakerName = hostName ?? clip.speakerName;
+  const resolvedAccent = accentColor ?? JBP_COLORS.red;
+
+  // Auto-generate a single CC line from the quote if none provided
   const ccLines: CCLine[] = captions ?? [
     {
-      text: clip.quote,
+      text: resolvedQuote,
       startFrame: 20,
       endFrame: durationInFrames - 20,
-      speaker: clip.speakerName.split(" ")[0].toUpperCase(),
+      speaker: resolvedSpeakerName.split(" ")[0].toUpperCase(),
     },
   ];
 
@@ -50,7 +70,7 @@ export const JBPHighlight: React.FC<JBPHighlightProps> = ({
   );
 
   // ── Quote text animates in word by word ─────────────────────────────────
-  const words = clip.quote.split(" ");
+  const words = resolvedQuote.split(" ");
   const wordDelay = 6; // frames between each word
   const quoteStartFrame = 25;
 
@@ -76,9 +96,9 @@ export const JBPHighlight: React.FC<JBPHighlightProps> = ({
         }}
       >
         <OffthreadVideo
-          src={clip.videoSrc}
-          startFrom={clip.startFrom}
-          endAt={clip.endAt}
+          src={resolvedVideoSrc}
+          startFrom={resolvedStartFrom}
+          endAt={resolvedEndAt}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </AbsoluteFill>
@@ -93,7 +113,7 @@ export const JBPHighlight: React.FC<JBPHighlightProps> = ({
         }}
       />
 
-      {/* Red accent bar at very bottom */}
+      {/* Accent bar at very bottom */}
       <div
         style={{
           position: "absolute",
@@ -101,16 +121,16 @@ export const JBPHighlight: React.FC<JBPHighlightProps> = ({
           left: 0,
           width: accentBarW,
           height: 5,
-          backgroundColor: JBP_COLORS.red,
+          backgroundColor: resolvedAccent,
           opacity: fadeOut,
         }}
       />
 
       {/* Speaker lower third */}
       <LowerThird
-        name={clip.speakerName}
+        name={resolvedSpeakerName}
         title="The Joe Budden Podcast"
-        accentColor={JBP_COLORS.red}
+        accentColor={resolvedAccent}
         showAtFrame={8}
         hideAtFrame={durationInFrames - 25}
       />
@@ -181,7 +201,7 @@ export const JBPHighlight: React.FC<JBPHighlightProps> = ({
       >
         <div
           style={{
-            backgroundColor: JBP_COLORS.red,
+            backgroundColor: resolvedAccent,
             color: "#fff",
             fontSize: 11,
             fontWeight: 700,
@@ -216,7 +236,7 @@ export const JBPHighlight: React.FC<JBPHighlightProps> = ({
           opacity: stampOpacity * fadeOut,
         }}
       >
-        <Waveform barCount={24} color={JBP_COLORS.red} height={28} width={160} />
+        <Waveform barCount={24} color={resolvedAccent} height={28} width={160} />
       </div>
 
       {/* Closed captions — sits between the accent bar and the quote */}

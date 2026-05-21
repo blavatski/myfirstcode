@@ -9,9 +9,19 @@ import {
 import { JBP_COLORS, JBP_EPISODE, JBP_FONTS } from "../jbp/jbp.config";
 import { Waveform } from "../jbp/components/Waveform";
 
+interface JBPIntroProps {
+  episodeNumber?: number;
+  episodeTitle?: string;
+  episodeDate?: string;
+}
+
 // Animates episode number and title in on a dark background with red accents.
 // 5 seconds (150 frames) at 30fps.
-export const JBPIntro: React.FC = () => {
+export const JBPIntro: React.FC<JBPIntroProps> = ({
+  episodeNumber = JBP_EPISODE.number,
+  episodeTitle = JBP_EPISODE.title,
+  episodeDate = JBP_EPISODE.date,
+}) => {
   const frame = useCurrentFrame();
   const { fps, width } = useVideoConfig();
 
@@ -123,7 +133,7 @@ export const JBPIntro: React.FC = () => {
             letterSpacing: "-0.04em",
           }}
         >
-          #{JBP_EPISODE.number}
+          #{episodeNumber}
         </div>
 
         {/* Divider */}
@@ -150,7 +160,7 @@ export const JBPIntro: React.FC = () => {
             transform: `translateX(${titleX}px)`,
           }}
         >
-          {JBP_EPISODE.title}
+          {episodeTitle}
         </div>
 
         {/* Date */}
@@ -166,7 +176,7 @@ export const JBPIntro: React.FC = () => {
             textTransform: "uppercase",
           }}
         >
-          {JBP_EPISODE.date}
+          {episodeDate}
         </div>
       </AbsoluteFill>
 
@@ -197,7 +207,7 @@ export const JBPIntro: React.FC = () => {
           textTransform: "uppercase",
         }}
       >
-        EP. {JBP_EPISODE.number}
+        EP. {episodeNumber}
       </div>
     </AbsoluteFill>
   );
