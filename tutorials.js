@@ -2,7 +2,8 @@
 /* Illustrated how-tos. Every figure is drawn here as inline SVG from joint positions,
    so the app needs no image files and nothing from outside. */
 (function(){
-  const INK = '#e8ede4', DIM = '#9aa89e', BELL = '#e8c95a', ARROW = '#8fbfe0', PROP = '#5d7166', GROUND = 108;
+  const BODY = '#e8ede4', TORSO = '#cfd8cb', FAR = '#6f8076', EDGE = '#1c2520', BELL = '#e8c95a', ARROW = '#8fbfe0', PROP = '#5d7166', GROUND = 108;
+  const VIDEO = {swing:'kettlebell swing form beginner', halo:'kettlebell halo how to', press:'kettlebell overhead press form', split:'bulgarian split squat form', walk:'', sit:'sit to stand exercise', hip:'standing hip circles mobility', cat:'standing cat cow stretch desk', twist:'standing torso twist warm up', arm:'arm circles shoulder rolls warm up', door:'doorway chest stretch', calf:'standing calf raise form', ankle:'ankle circles mobility'};
   const F = {hd:[50,21], shs:[[40,34],[60,34]], sh:[50,34], hp:[50,64], kn:[[44,86],[56,86]], ft:[[42,GROUND],[58,GROUND]], front:true};  // front-view base
   const S = {hd:[48,20], sh:[48,32], hp:[48,62], kn:[[47,85],[49,85]], ft:[[46,GROUND],[50,GROUND]]};                                       // side-view base
   const chair = `<path d="M20 46V74H44M22 74V${GROUND}M42 74V${GROUND}" />`;
@@ -29,8 +30,9 @@
         {hd:[52,33], sh:[51,45], hp:[46,76], kn:[[33,99],[67,82]], ft:[[20,86],[62,GROUND]], toe:[[14,86],[70,GROUND]], el:[[57,59],[57,59]], ha:[[59,53],[59,53]], bell:[64,55]}],
       cues:['Back foot rests on a chair or bench, laces down. Front foot far enough forward to stay flat.', 'Drop straight down until the back knee is just off the floor.', 'Drive up through the whole front foot. Do every rep on one leg, then switch.'],
       avoid:'Front heel lifting or the knee caving inward. Use no weight until it is steady.'},
-    walk: {name:'Walk', labels:['Two minutes'], frames:[
-        {...S, kn:[[40,84],[57,84]], ft:[[31,105],[61,GROUND]], toe:[[38,GROUND],[69,GROUND]], el:[[57,45],[41,46]], ha:[[63,54],[35,57]], arrows:['M72 96H92']}],
+    walk: {name:'Walk', labels:['Stride','Stride'], frames:[
+        {...S, kn:[[40,84],[57,84]], ft:[[31,105],[61,GROUND]], toe:[[38,GROUND],[69,GROUND]], el:[[57,45],[41,46]], ha:[[63,54],[35,57]], arrows:['M72 96H92']},
+        {...S, kn:[[57,84],[40,84]], ft:[[61,GROUND],[31,105]], toe:[[69,GROUND],[38,GROUND]], el:[[41,46],[57,45]], ha:[[35,57],[63,54]]}],
       cues:['Get up and walk anywhere for two minutes: hallway, stairs, around the block.', 'Let your arms swing and pick a pace a little faster than a stroll.'],
       avoid:'Standing still and calling it a break. The point is to move.'},
     sit: {name:'Sit-to-stands', labels:['Sit','Stand'], props:chair, frames:[
@@ -68,37 +70,85 @@
         {hd:[49,14], sh:[49,26], hp:[49,56], kn:[[48,79],[50,79]], ft:[[46,101],[50,101]], toe:[[54,GROUND],[58,GROUND]], el:[[66,41],[66,41]], ha:[[81,40],[81,40]]}],
       cues:['One hand on a wall or chair for balance, feet hip width.', 'Rise onto the balls of your feet as high as you can and pause.', 'Lower slowly, taking about two seconds.'],
       avoid:'Bouncing. The slow lowering is the useful part.'},
-    ankle: {name:'Ankle circles', labels:['Circle the foot'], props:wall(84), frames:[
-        {...S, hd:[46,20], sh:[46,32], hp:[46,62], kn:[[46,85],[57,80]], ft:[[45,GROUND],[62,97]], toe:[[52,GROUND],[70,99]], el:[[66,45],[66,45]], ha:[[83,43],[83,43]], arrows:['M78 92A9 9 0 1 1 68 108']}],
+    ankle: {name:'Ankle circles', labels:['Toes up','Toes down'], props:wall(84), frames:[
+        {...S, hd:[46,20], sh:[46,32], hp:[46,62], kn:[[46,85],[57,80]], ft:[[45,GROUND],[62,97]], toe:[[52,GROUND],[70,94]], el:[[66,45],[66,45]], ha:[[83,43],[83,43]], arrows:['M78 90A9 9 0 1 1 68 106']},
+        {...S, hd:[46,20], sh:[46,32], hp:[46,62], kn:[[46,85],[57,80]], ft:[[45,GROUND],[62,97]], toe:[[52,GROUND],[66,105]], el:[[66,45],[66,45]], ha:[[83,43],[83,43]]}],
       cues:['Hold a wall, lift one foot just off the floor.', 'Draw the biggest slow circle you can with your toes.', 'Ten each way, then switch feet.'],
       avoid:'Moving the whole leg. Only the ankle turns.'}
   };
 
-  const L = (a,b,o) => `<path d="M${a[0]} ${a[1]}L${b[0]} ${b[1]}"${o ? ` opacity="${o}"` : ''}/>`;
-  function fig(p, props, n){
-    const far = .45, out = [];
-    out.push(`<path d="M4 ${GROUND+3}H96" stroke="${PROP}" stroke-width="1.5"/>`);
-    if(props) out.push(`<g stroke="${PROP}" stroke-width="3">${props}</g>`);
-    out.push(`<g stroke="${INK}" stroke-width="4">`);
-    p.kn.forEach((k,i) => { const o = !p.front && i === 0 ? far : 0, toe = p.toe ? p.toe[i] : [p.ft[i][0] + (p.front ? (i ? 5 : -5) : 7), p.ft[i][1]];
-      out.push(L(p.hp,k,o), L(k,p.ft[i],o), L(p.ft[i],toe,o)); });
-    out.push(p.spine ? `<path d="M${p.sh[0]} ${p.sh[1]}Q${p.spine[0]} ${p.spine[1]} ${p.hp[0]} ${p.hp[1]}"/>` : L(p.sh,p.hp));
-    if(p.shs) out.push(L(p.shs[0],p.shs[1]));
-    if(p.el) p.el.forEach((e,i) => { const o = !p.front && i === 0 ? far : 0, s = p.shs ? p.shs[i] : p.sh; out.push(L(s,e,o), L(e,p.ha[i],o)); });
-    out.push(`</g><circle cx="${p.hd[0]}" cy="${p.hd[1]}" r="7.5" fill="#1c2520" stroke="${INK}" stroke-width="3.5"/>`);
-    if(p.bell) out.push(`<circle cx="${p.bell[0]}" cy="${p.bell[1]}" r="7" fill="${BELL}"/>`);
-    (p.arrows || []).forEach(d => out.push(`<path d="${d}" stroke="${ARROW}" stroke-width="2.5" stroke-dasharray="1 0" marker-end="url(#ah${n})"/>`));
-    return `<svg viewBox="0 0 100 116" role="img" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <defs><marker id="ah${n}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${ARROW}" stroke="none"/></marker></defs>${out.join('')}</svg>`;
+  /* ---- figure drawing: a solid mannequin built from joint positions ---- */
+  const seg = (a, b, w, c) => `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="${c}" stroke-width="${w}"/>`;
+  const limb = (pts, ws, c, edge) => (edge ? pts.slice(1).map((p,i) => seg(pts[i], p, ws[i]+3.4, EDGE)).join('') : '') + pts.slice(1).map((p,i) => seg(pts[i], p, ws[i], c)).join('');
+  function full(p){                                   // fill in defaults so two poses can be blended
+    const q = {...p};
+    q.toe = p.toe || p.ft.map((f,i) => [f[0] + (p.front ? (i ? 5 : -5) : 8), f[1]]);
+    q.hips = p.front ? [[p.hp[0]-5, p.hp[1]], [p.hp[0]+5, p.hp[1]]] : [p.hp, p.hp];
+    q.sho = p.shs || [p.sh, p.sh];
+    return q;
   }
+  function body(p0, props){
+    const p = full(p0), o = [];
+    o.push(`<path d="M3 ${GROUND+4}H97" stroke="${PROP}" stroke-width="1.5"/>`);
+    if(props) o.push(`<g stroke="${PROP}" stroke-width="3.5">${props}</g>`);
+    const leg = (i, c, e) => limb([p.hips[i], p.kn[i], p.ft[i]], [11, 8.5], c, e) + seg(p.ft[i], p.toe[i], 6.5, c);
+    const arm = (i, c, e) => p.el ? limb([p.sho[i], p.el[i], p.ha[i]], [8, 6.5], c, e) + `<circle cx="${p.ha[i][0].toFixed(1)}" cy="${p.ha[i][1].toFixed(1)}" r="3.8" fill="${c}"/>` : '';
+    const torso = p.front
+      ? `<path d="M${p.sho[0]}L${p.sho[1]}L${p.hips[1][0]+2} ${p.hips[1][1]}L${p.hips[0][0]-2} ${p.hips[0][1]}Z" fill="${TORSO}" stroke="${TORSO}" stroke-width="7"/>`
+      : (p.spine ? `<path d="M${p.sh[0]} ${p.sh[1]}Q${p.spine[0]} ${p.spine[1]} ${p.hp[0]} ${p.hp[1]}" stroke="${TORSO}" stroke-width="16"/>` : seg(p.sh, p.hp, 16, TORSO));
+    const neck = seg(p.sh, p.hd, 6, BODY), head = `<circle cx="${p.hd[0].toFixed(1)}" cy="${p.hd[1].toFixed(1)}" r="8.5" fill="${BODY}" stroke="${EDGE}" stroke-width="1.7"/>`;
+    let bell = '';
+    if(p.bell){
+      const h = p.ha[1], dx = h[0]-p.bell[0], dy = h[1]-p.bell[1], d = Math.hypot(dx,dy) || 1;
+      bell = `<circle cx="${(p.bell[0]+dx/d*7.5).toFixed(1)}" cy="${(p.bell[1]+dy/d*7.5).toFixed(1)}" r="4.6" stroke="${BELL}" stroke-width="2.8"/><circle cx="${p.bell[0].toFixed(1)}" cy="${p.bell[1].toFixed(1)}" r="8" fill="${BELL}" stroke="${EDGE}" stroke-width="1.5"/>`;
+    }
+    if(p.front) o.push(leg(0,BODY,1), leg(1,BODY,1), torso, neck, head, arm(0,BODY,1), arm(1,BODY,1), bell);
+    else o.push(leg(0,FAR,0), arm(0,FAR,0), torso, neck, head, leg(1,BODY,1), bell, arm(1,BODY,1));
+    return o.join('');
+  }
+  const SVG = (inner, extra) => `<svg viewBox="0 0 100 116" role="img" fill="none" stroke-linecap="round" stroke-linejoin="round"${extra || ''}>${inner}</svg>`;
   let uid = 0;
+  function still(p, props){
+    const n = ++uid;
+    const arrows = (p.arrows || []).map(d => `<path d="${d}" stroke="${ARROW}" stroke-width="2.5" marker-end="url(#ah${n})"/>`).join('');
+    return SVG(`<defs><marker id="ah${n}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${ARROW}" stroke="none"/></marker></defs>` + body(p, props) + arrows);
+  }
+  /* ---- animation: blend between the two key poses ---- */
+  const mix = (a, b, t) => Array.isArray(a) ? a.map((v,i) => mix(v, b[i], t)) : a + (b - a) * t;
+  function blend(a0, b0, t){
+    const a = full(a0), b = full(b0), p = {front:a.front};
+    for(const k of ['hd','sh','hp','kn','ft','toe','el','ha','bell','spine','shs']) if(a[k] && b[k]) p[k] = mix(a[k], b[k], t);
+    return p;
+  }
+  const still_only = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const CYCLE = 3400;
+  function phase(now){                                  // hold, move, hold, move back
+    const u = (now % CYCLE) / CYCLE, e = x => x*x*(3-2*x);
+    return u < .18 ? 0 : u < .5 ? e((u-.18)/.32) : u < .68 ? 1 : 1 - e((u-.68)/.32);
+  }
+  let last = 0;
+  function tick(now){
+    if(now - last > 33){
+      last = now; const t = phase(now);
+      document.querySelectorAll('svg[data-anim]').forEach(s => {
+        if(!s.getClientRects().length) return;          // skip hidden tabs and closed panels
+        const d = T[s.dataset.anim]; s.innerHTML = body(blend(d.frames[0], d.frames[1], t), d.props);
+      });
+    }
+    requestAnimationFrame(tick);
+  }
+  if(!still_only && window.requestAnimationFrame) requestAnimationFrame(tick);
+
   // Returns the full illustrated card body for one move.
   window.tutorial = function(id){
     const t = T[id]; if(!t) return '';
+    const q = VIDEO[id];
     return `<div class="tut">
-      <div class="tut-figs n${t.frames.length}">${t.frames.map((f,i) => `<figure>${fig(f, t.props, ++uid)}<figcaption><b>${t.frames.length > 1 ? i+1 : ''}</b> ${t.labels[i]}</figcaption></figure>`).join('')}</div>
+      ${still_only ? '' : `<figure class="tut-anim">${SVG(body(t.frames[0], t.props), ` data-anim="${id}"`)}<figcaption>${t.labels.join(' → ')}</figcaption></figure>`}
+      <div class="tut-figs">${t.frames.map((f,i) => `<figure>${still(f, t.props)}<figcaption><b>${i+1}</b> ${t.labels[i]}</figcaption></figure>`).join('')}</div>
       <ol class="tut-cues">${t.cues.map(c => `<li>${c}</li>`).join('')}</ol>
       <p class="tut-avoid"><b>Avoid:</b> ${t.avoid}</p>
+      ${q ? `<a class="tut-vid" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/results?search_query=${encodeURIComponent(q)}">Watch real video demos on YouTube ↗</a>` : ''}
     </div>`;
   };
   window.tutorialName = id => (T[id] || {}).name || '';

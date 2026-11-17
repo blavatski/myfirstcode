@@ -1,5 +1,5 @@
 // Offline cache for KB Theorem. It only ever fetches this app's own files.
-const CACHE = 'kbt-v2';
+const CACHE = 'kbt-v3';
 const FILES = ['./', 'index.html', 'app.js', 'tutorials.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
