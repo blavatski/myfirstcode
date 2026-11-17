@@ -134,6 +134,24 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:5px;font-size:14px;color:va
 .drill .nm{font-weight:600}
 .drill .ds{font-size:13px;color:var(--chalk-dim)}
 
+.how{border-top:1px dashed var(--line);padding-top:10px}
+.how summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border:1.5px solid var(--line);border-radius:999px;font-weight:600;font-size:13px;color:var(--blue)}
+.how summary::-webkit-details-marker{display:none}
+.how summary::before{content:"▸"}
+.how[open] summary::before{content:"▾"}
+.how[open] summary{margin-bottom:12px}
+.drill .how{grid-column:1/-1;border-top:0;padding-top:0}
+.tut-h{font-family:var(--display);font-weight:700;font-size:17px;text-transform:uppercase;letter-spacing:.03em;margin:14px 0 8px}
+.tut-h:first-of-type{margin-top:0}
+.tut{display:grid;gap:10px}
+.tut-figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tut-figs.n1{grid-template-columns:minmax(0,180px)}
+.tut-figs figure{margin:0;background:var(--board);border:1px solid var(--line);border-radius:8px;padding:6px 6px 8px;text-align:center}
+.tut-figs svg{display:block;width:100%;height:auto;max-height:190px}
+.tut-figs figcaption{font-size:12px;color:var(--chalk-dim);margin-top:2px}
+.tut-figs figcaption b{font-family:var(--mono);color:var(--yellow);margin-right:2px}
+.tut-cues{margin:0;padding-left:20px;display:grid;gap:5px;font-size:14px}
+.tut-avoid{margin:0;font-size:13px;padding:8px 10px;border-radius:6px;background:var(--pink-soft);color:var(--pink)}
 .rules{margin:0;padding:2px 0 2px 14px;border-left:2px solid var(--yellow);display:grid;gap:9px}
 .rules p{margin:0;font-size:14px;max-width:64ch}
 .rules b{color:var(--yellow);font-weight:600}
@@ -186,6 +204,7 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:5px;font-size:14px;color:va
   <button class="tab" data-tab="proof">Proof</button>
   <button class="tab" data-tab="setup">Setup</button>
 </nav></div>
+<script src="tutorials.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

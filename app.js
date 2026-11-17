@@ -21,6 +21,8 @@ const DRILLS = [
   {id:'calf',  name:'Calf raises',               dose:'20, hold something for balance',   area:'Ankles'},
   {id:'ankle', name:'Ankle circles',             dose:'10 each way, each foot',           area:'Ankles'}
 ];
+const TUT_OF = {'Swings':'swing', 'Halos':'halo', 'Overhead press':'press', 'Bulgarian split squat':'split'};
+const how = (ids, label) => `<details class="how"><summary>${label}</summary>${ids.map(id => `<div class="tut-h">${tutorialName(id)}</div>${tutorial(id)}`).join('')}</details>`;
 const ALARMS = [['Kettlebell','9:00 PM, every day'], ['Movement break','10 AM, 12, 2, 4, 6 and 8 PM, every day']];
 
 /* ---------- dates ---------- */
@@ -187,6 +189,7 @@ function dayCard(s){
     ${back}
     <ul class="moves">${p.moves.map(m => `<li class="${m[0]}"><span>${m[1]}</span><span>${m[2]}</span></li>`).join('')}</ul>
     <p class="note">${p.tip}</p>
+    ${how([...new Set(p.moves.map(m => TUT_OF[m[1]]).filter(Boolean))], 'Show me how')}
     ${fields}
   </div>`;
 }
@@ -232,11 +235,12 @@ function renderMove(){
     <div class="card">
       <div class="card-top"><span class="n">Next break</span><span class="tag">${sg.area}</span></div>
       <div><b>${sg.name}</b><div class="fine">${sg.dose}</div></div>
+      ${tutorial(sg.id)}
       <div class="row"><button class="btn" data-act="move" data-id="${sg.id}">Done, log it</button>${ms.length ? `<button class="btn ghost small" data-act="unmove">Undo last</button>` : ''}</div>
     </div>
     <div class="card">
       <div><b>Or pick one</b></div>
-      <div class="drills">${DRILLS.map(d => `<div class="drill"><div><div class="nm">${d.name}</div><div class="ds">${d.dose} · ${d.area}</div></div><button class="btn ghost small" data-act="move" data-id="${d.id}">Log</button></div>`).join('')}</div>
+      <div class="drills">${DRILLS.map(d => `<div class="drill"><div><div class="nm">${d.name}</div><div class="ds">${d.dose} · ${d.area}</div></div><button class="btn ghost small" data-act="move" data-id="${d.id}">Log</button>${how([d.id], 'How')}</div>`).join('')}</div>
     </div>
     <div class="card">
       <div><b>Last 7 days</b></div>
@@ -257,6 +261,8 @@ function renderPlan(){
       <p><b>A good swing:</b> hinge at the hips, bell to chest height, hips and knees locked at the top. Count only those. Clear the space in front of you first.</p>
       <p><b>Stop rules:</b> end the set when your lower back takes over from your hips, or your grip starts to slip. Chest pain, dizziness or breathlessness that feels wrong means stop for the day and get it checked.</p>
     </div>
+    <h2>The moves</h2>
+    ${['swing','halo','press','split'].map(id => `<div class="card"><div class="card-top"><span class="n">${tutorialName(id)}</span></div>${tutorial(id)}</div>`).join('')}
     <h2>The eight levels</h2>
     <div class="tbl">
       <div class="tr"><span>Level</span><span>A · rounds</span><span>B · block</span></div>
